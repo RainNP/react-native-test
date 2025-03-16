@@ -7,7 +7,12 @@ export const AddUserModal = (props: {
   setVisible: (visible: boolean) => void,
 }) => {
 
-  const [searchName, setSearchName] = useState<string>('')
+  const [name, setName] = useState<string>('')
+
+  const handleClose = () => {
+    setName('')
+    props.setVisible(false)
+  };
 
   // POST
   const handleSave = async () => {}
@@ -23,16 +28,16 @@ export const AddUserModal = (props: {
       <View style={styles.modal}>
         <View style={styles.modalHeader}>
           <Text style={styles.headerText}>เพิ่มลูกค้า</Text>
-          <TouchableOpacity onPress={() => props.setVisible(false)}>
+          <TouchableOpacity onPress={handleClose}>
             <MaterialCommunityIcons name='close' color='#8A8C8B' size={24}></MaterialCommunityIcons>
           </TouchableOpacity>
         </View>
         <View style={styles.modalInputContainer}>
           <FontAwesome5 name='user' color='#8A8C8B' size={14} solid></FontAwesome5>
-          <TextInput style={styles.input} onChangeText={(text) => setSearchName(text)}></TextInput>
+          <TextInput style={styles.input} onChangeText={(text) => setName(text)}></TextInput>
         </View>
         <View style={styles.modalButtonContainer}>
-          <TouchableOpacity style={styles.modalButtonClose} onPress={() => props.setVisible(false)}>
+          <TouchableOpacity style={styles.modalButtonClose} onPress={handleClose}>
             <Text style={styles.closeText}>ปิด</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.modalButtonSave} onPress={handleSave}>
