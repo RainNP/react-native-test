@@ -5,17 +5,36 @@ import { UnfinishUser } from "../components/unfinishUser";
 import { FinishUser } from "../components/finishUser";
 import { AddUserModal } from "../components/addUserModal";
 import { useEffect, useState } from "react";
+import { UserResponse } from "../model/userModel";
+import User from "../repositories/User";
 
 export const HomeScreen = () => {
 
-  const [unfinishUsers, setUnfinishUsers] = useState()
-  const [finishUsers, setFinishUsers] = useState()
+  const [unfinishUsers, setUnfinishUsers] = useState<UserResponse[]>([])
+  const [finishUsers, setFinishUsers] = useState<UserResponse[]>([])
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
   const [searchName, setSearchName] = useState<string>('')
 
   const [modalVisible, setModalVisible] = useState<boolean>(false)
 
-  useEffect(() => {}, []);
+  const fetchData = async () => {
+    setIsLoading(true)
+    const users = await User.getUsers()
+    setUnfinishUsers(users.filter(user => user.status === false))
+    setFinishUsers(users.filter(user => user.status === true))
+    setIsLoading(false)
+  };
+
+  useEffect(() => {
+    fetchData()
+  }, []);
+
+  if (isLoading){
+    return (
+      <Text>Loading...</Text>
+    )
+  }
 
   return (
     <View style={styles.container}>
@@ -43,20 +62,28 @@ export const HomeScreen = () => {
           </View>
         </View>
         <View style={styles.contentContainer}>
-          <View style={styles.unfinishUserContainer}>
-            <View style={styles.contentTitleContainer}>
-              <Text style={styles.contentTitle}>ลูกค้าใหม่ / ข้อมูลไม่ครบถ้วน</Text>
-              <View style={styles.contentTitleLine}></View>
+          {unfinishUsers.length > 0 &&
+            <View style={styles.unfinishUserContainer}>
+              <View style={styles.contentTitleContainer}>
+                <Text style={styles.contentTitle}>ลูกค้าใหม่ / ข้อมูลไม่ครบถ้วน</Text>
+                <View style={styles.contentTitleLine}></View>
+              </View>
+              {unfinishUsers.map(user => (
+                <UnfinishUser key={user.id} id={user.id} name={user.name} profileImage={user.profileImage}></UnfinishUser>
+              ))}
             </View>
-            <UnfinishUser id='1' name='สวัสดี' profileImage={null}></UnfinishUser>
-          </View>
-          <View style={styles.finishUserContainer}>
-          <View style={styles.contentTitleContainer}>
-              <Text style={styles.contentTitle}>วางแผนการเงินแล้ว</Text>
-              <View style={styles.contentTitleLine}></View>
+          }
+          {finishUsers.length > 0 &&
+            <View style={styles.finishUserContainer}>
+              <View style={styles.contentTitleContainer}>
+                <Text style={styles.contentTitle}>วางแผนการเงินแล้ว</Text>
+                <View style={styles.contentTitleLine}></View>
+              </View>
+              {finishUsers.map(user => (
+                <FinishUser key={user.id} id={user.id} name={user.name} profileImage={user.profileImage}></FinishUser>
+              ))}
             </View>
-            <FinishUser id='1' name='สวัสดี' profileImage={null}></FinishUser>
-          </View>
+          }
         </View>
       </ScrollView>
       <AddUserModal visible={modalVisible} setVisible={setModalVisible}></AddUserModal>
