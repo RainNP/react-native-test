@@ -11,7 +11,7 @@ export const FinishUser = (props: {
       <View style={styles.profileContainer}>
         <View style={styles.imageContainer}>
           {props.profileImage ? 
-          <Image source={{ uri: props.profileImage }} resizeMode='cover'></Image> : 
+          <Image source={{ uri: props.profileImage }} resizeMode='cover' style={styles.profileImage}></Image> : 
           <MaterialCommunityIcons name='account' size={32} color='#1F87AA'></MaterialCommunityIcons>}
         </View>
         <Text style={styles.profileText}>{props.name}</Text>
@@ -51,6 +51,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#CEF3FF',
     justifyContent: 'center',
     alignItems: 'center',
+    overflow: 'hidden',
+  },
+  profileImage: {
+    width: '100%',
+    height: '100%',
   },
   profileText: {
     color: '#456455',
