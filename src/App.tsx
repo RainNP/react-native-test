@@ -15,6 +15,7 @@ export default function App() {
 
   let [fontsLoaded] = useFonts({IBMPlexSansThai_700Bold, IBMPlexSansThai_400Regular});
 
+  // FIXME: landscape dont work in ipad emulator
   const [orientation, setOrientation] = useState(1);
   useEffect(() => {
     lockOrientation();
