@@ -1,10 +1,13 @@
 import { Modal, View, StyleSheet, Text, TouchableOpacity, TextInput } from "react-native";
 import { MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
 import { useState } from "react";
+import { UserCreateRequest } from "../model/userModel";
+import User from "../repositories/User";
 
 export const AddUserModal = (props: {
   visible: boolean,
   setVisible: (visible: boolean) => void,
+  fetchData: () => void,
 }) => {
 
   const [name, setName] = useState<string>('')
@@ -15,7 +18,15 @@ export const AddUserModal = (props: {
   };
 
   // POST
-  const handleSave = async () => {}
+  // TODO: handle error
+  const handleSave = async () => {
+    const user: UserCreateRequest = {
+      name: name,
+    }
+    await User.createUser(user)
+    props.fetchData()
+    handleClose()
+  }
 
   return (
   <Modal

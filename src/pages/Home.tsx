@@ -86,7 +86,7 @@ export const HomeScreen = () => {
           }
         </View>
       </ScrollView>
-      <AddUserModal visible={modalVisible} setVisible={setModalVisible}></AddUserModal>
+      <AddUserModal visible={modalVisible} setVisible={setModalVisible} fetchData={fetchData}></AddUserModal>
     </View>
   );
 };
