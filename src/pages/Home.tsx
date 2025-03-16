@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput } from "react-native";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, ActivityIndicator } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons, FontAwesome6, FontAwesome5 } from '@expo/vector-icons';
 import { UnfinishUser } from "../components/unfinishUser";
@@ -20,6 +20,8 @@ export const HomeScreen = () => {
 
   const fetchData = async () => {
     setIsLoading(true)
+    // set timeout to simulate loading
+    await new Promise(resolve => setTimeout(resolve, 1000))
     const users = await User.getUsers()
     setUnfinishUsers(users.filter(user => user.status === false))
     setFinishUsers(users.filter(user => user.status === true))
@@ -29,12 +31,6 @@ export const HomeScreen = () => {
   useEffect(() => {
     fetchData()
   }, []);
-
-  if (isLoading){
-    return (
-      <Text>Loading...</Text>
-    )
-  }
 
   return (
     <View style={styles.container}>
@@ -61,30 +57,32 @@ export const HomeScreen = () => {
             <TextInput style={styles.input} onChangeText={(text) => setSearchName(text)}></TextInput>
           </View>
         </View>
-        <View style={styles.contentContainer}>
-          {unfinishUsers.length > 0 &&
-            <View style={styles.unfinishUserContainer}>
-              <View style={styles.contentTitleContainer}>
-                <Text style={styles.contentTitle}>ลูกค้าใหม่ / ข้อมูลไม่ครบถ้วน</Text>
-                <View style={styles.contentTitleLine}></View>
+        {isLoading ? <ActivityIndicator size='large' color='#004C65'></ActivityIndicator>
+          :<View style={styles.contentContainer}>
+            {unfinishUsers.length > 0 &&
+              <View style={styles.unfinishUserContainer}>
+                <View style={styles.contentTitleContainer}>
+                  <Text style={styles.contentTitle}>ลูกค้าใหม่ / ข้อมูลไม่ครบถ้วน</Text>
+                  <View style={styles.contentTitleLine}></View>
+                </View>
+                {unfinishUsers.map(user => (
+                  <UnfinishUser key={user.id} id={user.id} name={user.name} profileImage={user.profileImage}></UnfinishUser>
+                ))}
               </View>
-              {unfinishUsers.map(user => (
-                <UnfinishUser key={user.id} id={user.id} name={user.name} profileImage={user.profileImage}></UnfinishUser>
-              ))}
-            </View>
-          }
-          {finishUsers.length > 0 &&
-            <View style={styles.finishUserContainer}>
-              <View style={styles.contentTitleContainer}>
-                <Text style={styles.contentTitle}>วางแผนการเงินแล้ว</Text>
-                <View style={styles.contentTitleLine}></View>
+            }
+            {finishUsers.length > 0 &&
+              <View style={styles.finishUserContainer}>
+                <View style={styles.contentTitleContainer}>
+                  <Text style={styles.contentTitle}>วางแผนการเงินแล้ว</Text>
+                  <View style={styles.contentTitleLine}></View>
+                </View>
+                {finishUsers.map(user => (
+                  <FinishUser key={user.id} id={user.id} name={user.name} profileImage={user.profileImage}></FinishUser>
+                ))}
               </View>
-              {finishUsers.map(user => (
-                <FinishUser key={user.id} id={user.id} name={user.name} profileImage={user.profileImage}></FinishUser>
-              ))}
-            </View>
-          }
-        </View>
+            }
+          </View>
+        }
       </ScrollView>
       <AddUserModal visible={modalVisible} setVisible={setModalVisible} fetchData={fetchData}></AddUserModal>
     </View>
