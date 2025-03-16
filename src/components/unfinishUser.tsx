@@ -24,6 +24,7 @@ export const UnfinishUser = (props: {
   );
 }
 
+// FIXME: could DRY this with FinishUser
 const styles = StyleSheet.create({
   userContainer: {
     flexDirection: 'row',
