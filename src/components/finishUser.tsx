@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     gap: 16,
+    width: '100%',
   },
   profileContainer: {
     flexDirection: 'row',
