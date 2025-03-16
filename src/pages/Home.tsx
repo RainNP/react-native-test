@@ -21,7 +21,7 @@ export const HomeScreen = () => {
   const fetchData = async () => {
     setIsLoading(true)
     // set timeout to simulate loading
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    // await new Promise(resolve => setTimeout(resolve, 1000))
     const users = await User.getUsers()
     setUnfinishUsers(users.filter(user => user.status === false))
     setFinishUsers(users.filter(user => user.status === true))
@@ -38,52 +38,54 @@ export const HomeScreen = () => {
         colors={['#ABCDEF', '#FEDCBA']}
         style={styles.background}
       />
-      <ScrollView contentContainerStyle={styles.mainContainer}>
-        <View style={styles.headerContainer}>
-          <View style={styles.titleContainer}>
-            <View style={styles.titleView}>
-              <MaterialCommunityIcons name='chevron-left' color='#004C65' size={30}></MaterialCommunityIcons>
-              <Text style={styles.title}>กรอกชื่อลูกค้าที่จะวางแผนการเงิน</Text>
-            </View>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)} >
-                <FontAwesome6 name='plus' color='#1F87AA' size={24}></FontAwesome6>
-                <Text style={styles.buttonText}>เพิ่ม</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={styles.searchBar}>
-            <FontAwesome5 name='user' color='#8A8C8B' solid></FontAwesome5>
-            <TextInput style={styles.input} onChangeText={(text) => setSearchName(text)}></TextInput>
-          </View>
-        </View>
-        {isLoading ? <ActivityIndicator size='large' color='#004C65'></ActivityIndicator>
-          :<View style={styles.contentContainer}>
-            {unfinishUsers.length > 0 &&
-              <View style={styles.unfinishUserContainer}>
-                <View style={styles.contentTitleContainer}>
-                  <Text style={styles.contentTitle}>ลูกค้าใหม่ / ข้อมูลไม่ครบถ้วน</Text>
-                  <View style={styles.contentTitleLine}></View>
-                </View>
-                {unfinishUsers.map(user => (
-                  <UnfinishUser key={user.id} id={user.id} name={user.name} profileImage={user.profileImage}></UnfinishUser>
-                ))}
+      <View style={styles.mainContainer}>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.headerContainer}>
+            <View style={styles.titleContainer}>
+              <View style={styles.titleView}>
+                <MaterialCommunityIcons name='chevron-left' color='#004C65' size={30}></MaterialCommunityIcons>
+                <Text style={styles.title}>กรอกชื่อลูกค้าที่จะวางแผนการเงิน</Text>
               </View>
-            }
-            {finishUsers.length > 0 &&
-              <View style={styles.finishUserContainer}>
-                <View style={styles.contentTitleContainer}>
-                  <Text style={styles.contentTitle}>วางแผนการเงินแล้ว</Text>
-                  <View style={styles.contentTitleLine}></View>
-                </View>
-                {finishUsers.map(user => (
-                  <FinishUser key={user.id} id={user.id} name={user.name} profileImage={user.profileImage}></FinishUser>
-                ))}
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)} >
+                  <FontAwesome6 name='plus' color='#1F87AA' size={24}></FontAwesome6>
+                  <Text style={styles.buttonText}>เพิ่ม</Text>
+                </TouchableOpacity>
               </View>
-            }
+            </View>
+            <View style={styles.searchBar}>
+              <FontAwesome5 name='user' color='#8A8C8B' solid></FontAwesome5>
+              <TextInput style={styles.input} onChangeText={(text) => setSearchName(text)}></TextInput>
+            </View>
           </View>
-        }
-      </ScrollView>
+          {isLoading ? <ActivityIndicator size='large' color='#004C65'></ActivityIndicator>
+            :<View style={styles.contentContainer}>
+              {unfinishUsers.length > 0 &&
+                <View style={styles.unfinishUserContainer}>
+                  <View style={styles.contentTitleContainer}>
+                    <Text style={styles.contentTitle}>ลูกค้าใหม่ / ข้อมูลไม่ครบถ้วน</Text>
+                    <View style={styles.contentTitleLine}></View>
+                  </View>
+                  {unfinishUsers.map(user => (
+                    <UnfinishUser key={user.id} id={user.id} name={user.name} profileImage={user.profileImage}></UnfinishUser>
+                  ))}
+                </View>
+              }
+              {finishUsers.length > 0 &&
+                <View style={styles.finishUserContainer}>
+                  <View style={styles.contentTitleContainer}>
+                    <Text style={styles.contentTitle}>วางแผนการเงินแล้ว</Text>
+                    <View style={styles.contentTitleLine}></View>
+                  </View>
+                  {finishUsers.map(user => (
+                    <FinishUser key={user.id} id={user.id} name={user.name} profileImage={user.profileImage}></FinishUser>
+                  ))}
+                </View>
+              }
+            </View>
+          }
+        </ScrollView>
+      </View>
       <AddUserModal visible={modalVisible} setVisible={setModalVisible} fetchData={fetchData}></AddUserModal>
     </View>
   );
@@ -114,9 +116,14 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     marginTop: 100,
     marginBottom: 30,
-    paddingTop: 24,
+    paddingVertical: 24,
     paddingHorizontal: 32,
     alignSelf: 'center',
+  },
+  scrollContainer: {
+    flexDirection: 'column',
+    width: '100%',
+    alignItems: 'center',
   },
   headerContainer: {
     flexDirection: 'column',
